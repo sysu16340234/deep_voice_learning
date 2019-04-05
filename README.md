@@ -37,3 +37,23 @@
 ![loss](https://github.com/sysu16340234/deep_voice_learning/blob/master/imgs/loss.png)
 
 其中λi是常数,^t和t分别是第n个音素持续时间的估计值和实值,^p和p分别是第n个音素是浊音的概率估计值和实值,CE是交叉熵函数,^Fn,t和Fn,t分别是t时刻基频的估计值和实值,T个采样在持续时间内是等间隔的.
+
+**4.音频合成模型**
+
+音频合成模型采用改进的WaveNet,其结构如下:
+
+![model](https://github.com/sysu16340234/deep_voice_learning/blob/master/imgs/wavenet.png)
+
+WaveNet使用一个条件网络c = C(v),将低频语言特征转化为原生音频,以及一个自回归过程P(yi|c, yi−1, . . . , yi−R)在给定当前时间步长和R个音频样本的条件下来预测下一个音频样本,R是感受野,是由网络结构确定的.
+
+* **自回归的WaveNet**
+
+自回归网络结构通过网络的层数l,skip通道数s来和残差通道数r来参数化,使用μ律将音频量化为a = 256个值,one-hot编码在2x1卷积后,为残差堆栈的第一层生成输入x(0):
+
+![](https://github.com/sysu16340234/deep_voice_learning/blob/master/imgs/11.png)
+
+其中*代表卷积运算,y是输入音频的量化值,
+
+在后续的层中,采用以下方法计算隐藏状态的值h(i)和下一个输入x(i):
+
+![](https://github.com/sysu16340234/deep_voice_learning/blob/master/imgs/12.png)
