@@ -71,3 +71,11 @@ L(i)为该层调整网络的输出,卷积的过程实际上是通过r通道输�
 zs最后通过两个全连接层得到输出分布p:
 
 ![](https://github.com/sysu16340234/deep_voice_learning/blob/master/imgs/18.png)
+
+* **调整网络**
+
+调整网络的目的是为了产生一组相关的语言特征,交给WaveNet作为调节向量来产生可识别的音频,由于音频的频率远高于语言特征的频率,因此需要对特征进行上采样,上采样的方法是将特征通过两个双向QRNN层将特征传递给fo-pooling层和2x1卷积层,QRNN的具体定义如下:
+
+![](https://github.com/sysu16340234/deep_voice_learning/blob/master/imgs/20.png)
+
+双向QRNN层通过计算输入序列和输入序列的反向副本的两个QRNN实现,将这两个QRNN的输出通道堆叠,在经过两层的QRNN后进行通道交错,使WaveNet中的sigmoid和tanh函数都能得到正向和反向的QRNN输出,最后进行一次重复采样将频率上采样到原生音频的频率
